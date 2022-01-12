@@ -543,7 +543,6 @@ def technical_404_response(request, exception):
             resolver_match = resolve(request.path)
         except Http404:
             pass
-
     if resolver_match is not None:
         obj = resolver_match.func
 
