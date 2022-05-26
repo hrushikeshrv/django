@@ -237,3 +237,9 @@ class SynchronousOnlyOperation(Exception):
     """The user tried to call a sync-only function from an async context."""
 
     pass
+
+
+class RateLimited(Exception):
+    """An incoming request has exceeded a rate-limit"""
+
+    pass
