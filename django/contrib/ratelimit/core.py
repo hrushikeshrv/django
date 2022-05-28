@@ -6,6 +6,7 @@ import ipaddress
 
 
 def get_ip(request):
+    """Gets the request's IP address"""
     ip_meta_key = getattr(settings, 'RATELIMIT_IP_META', None)
     if not ip_meta_key:
         ip = request.META['REMOTE_ADDR']
@@ -23,7 +24,7 @@ def get_ip(request):
         ip = request.META[ip_meta_key]
     else:
         raise ImproperlyConfigured(
-            '"Could not get IP address from the IP meta key "%s"' % ip_meta_key
+            'Could not get IP address from the IP meta key "%s"' % ip_meta_key
         )
 
     if ':' in ip:
@@ -33,3 +34,25 @@ def get_ip(request):
 
     network = ipaddress.ip_network(f'{ip}/{mask}', strict=False)
     return str(network.network_address)
+
+
+def get_ip_or_user(request):
+    if request.user.is_authenticated:
+        return str(request.user.pk)
+    return get_ip(request)
+
+
+def get_header(request, header):
+    return request.META.get(header, '')
+
+
+def match_method(request, methods='ALL'):
+    """
+    Returns a boolean indicating whether this request should be rate-limited, based
+    on the methods to rate-limit.
+    """
+    if methods == 'ALL':
+        return True
+    if not isinstance(methods, (list, tuple)):
+        return request.method == methods.upper()
+    return request.method in [m.upper() for m in methods]
