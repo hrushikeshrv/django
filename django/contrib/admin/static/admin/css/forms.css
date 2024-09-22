@@ -101,7 +101,8 @@ fieldset .inline-heading,
     word-wrap: break-word;
 }
 
-.aligned label:has(+.help) {
+.aligned label:has(+.help),
+.aligned label:has(+.errorlist) {
     margin-bottom: 0;
 }
 
